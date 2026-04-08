@@ -12,10 +12,5 @@ dependencies = [
     "sqlalchemy>=2.0.49",
 ]
 
-[tool.uv.workspace]
-members = [
-    "shared/db",
-]
-
 [tool.uv.sources]
-db = { workspace = true }
+db = { path = "../../shared/database", editable = true }

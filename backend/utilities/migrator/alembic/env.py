@@ -22,7 +22,7 @@ if config.config_file_name is not None:
 # add your model's MetaData object here
 # for 'autogenerate' support
 
-from shared.db import models  # noqa: E402
+from db import models  # noqa: E402
 
 target_metadata = models.Base.metadata
 
