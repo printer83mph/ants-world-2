@@ -18,5 +18,5 @@ class UserCreate(pd.BaseModel):
 
 
 class UserUpdate(pd.BaseModel):
-    username: Optional[str] = pd.Field(max_length=32, default=None)
-    hashed_password: Optional[str] = None
+    username: str = pd.Field(max_length=32, default="")
+    hashed_password: str = ""
