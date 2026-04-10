@@ -1,0 +1,56 @@
+name: Check python code quality
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "backend/**"
+      - "backend/*"
+    paths-ignore:
+      - "README.md"
+
+jobs:
+  static-analysis-backend:
+    runs-on: ubuntu-latest
+    env:
+      BACKEND_PROJECT_PATHS: |
+        backend/services/auth
+        backend/shared/base-config
+        backend/shared/database
+        backend/shared/repository
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+
+      - name: Install basedpyright and ruff globally
+        run: |
+          uv tool install basedpyright \
+            && uv tool install ruff
+
+      - name: uv sync all projects
+        run: |
+          while IFS= read -r path; do
+            [ -z "$path" ] && continue
+            echo "uv syncing $path"
+            uv sync --directory "$path" --frozen
+          done <<< "${{ env.BACKEND_PROJECT_PATHS }}"
+
+      - name: Typecheck with basedpyright on all projects
+        run: |
+          while IFS= read -r path; do
+            [ -z "$path" ] && continue
+            echo "Typechecking with basedpyright on $path"
+            uv run --directory "$path" basedpyright .
+          done <<< "${{ env.BACKEND_PROJECT_PATHS }}"
+
+      - name: Check format with ruff on all projects
+        run: |
+          while IFS= read -r path; do
+            [ -z "$path" ] && continue
+            echo "Checking format with ruff on $path"
+            uv run --directory "$path" ruff check .
+          done <<< "${{ env.BACKEND_PROJECT_PATHS }}"

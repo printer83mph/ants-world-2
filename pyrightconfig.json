@@ -1,0 +1,11 @@
+{
+  "typeCheckingMode": "recommended",
+  "pythonVersion": "3.12",
+  "include": ["backend"],
+  "extraPaths": [
+    "backend/services/auth",
+    "backend/shared/base-config",
+    "backend/shared/database",
+    "backend/shared/repository",
+  ],
+}
