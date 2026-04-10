@@ -9,7 +9,7 @@ def create_async_engine(database_url: str) -> AsyncEngine:
     return sa_create_async_engine(database_url)
 
 
-def create_session_local(engine) -> async_sessionmaker[AsyncSession]:
+def create_async_session(engine) -> async_sessionmaker[AsyncSession]:
     """Create SessionLocal class for database sessions"""
     return async_sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

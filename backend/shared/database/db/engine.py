@@ -21,7 +21,7 @@ def create_session_local(engine: Engine) -> sessionmaker[Session]:
 
 def get_database_dependency(
     SessionLocal: sessionmaker[Session],
-) -> Callable[[], Generator[Session]]:
+) -> Callable[[], Generator[Session, None, None]]:
     """Create database dependency function"""
 
     def get_db():
