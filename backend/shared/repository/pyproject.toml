@@ -16,6 +16,13 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["repo"]
+include = ["repo/py.typed"]
 
 [tool.uv.sources]
 db = { path = "../database", editable = true }
+
+[tool.basedpyright]
+typeCheckingMode = "recommended"
+extraPaths = [
+    "../database",
+]

@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta, timezone
-from typing import Optional
+from typing import TypeAlias
 
 from fastapi.security import HTTPBearer, OAuth2PasswordBearer
 from jose import JWTError, jwt
@@ -22,7 +22,10 @@ def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+JwtDict: TypeAlias = dict[str, str | int | float | bool | datetime]
+
+
+def create_access_token(data: JwtDict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
     now = datetime.now(timezone.utc)
     if expires_delta:
@@ -37,7 +40,10 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     return encoded_jwt
 
 
-def create_refresh_token(data: dict, expires_delta: Optional[timedelta] = None):
+def create_refresh_token(
+    data: JwtDict,
+    expires_delta: timedelta | None = None,
+):
     to_encode = data.copy()
     now = datetime.now(timezone.utc)
     if expires_delta:
@@ -52,7 +58,7 @@ def create_refresh_token(data: dict, expires_delta: Optional[timedelta] = None):
     return encoded_jwt
 
 
-def verify_token(token: str, token_type: str = "access") -> Optional[str]:
+def verify_token(token: str, token_type: str = "access") -> str | None:
     try:
         payload = jwt.decode(
             token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm]
@@ -60,10 +66,10 @@ def verify_token(token: str, token_type: str = "access") -> Optional[str]:
         username = payload.get("sub")
         token_type_claim = payload.get("type")
 
-        if not (isinstance(username, str) and isinstance(token_type_claim, str)):
+        if (not isinstance(username, str)) or (not isinstance(token_type_claim, str)):
             return None
 
-        if username is None or token_type_claim != token_type:
+        if token_type_claim != token_type:
             return None
 
         return username
@@ -73,7 +79,7 @@ def verify_token(token: str, token_type: str = "access") -> Optional[str]:
 
 async def authenticate_user(
     users: UsersRepo, username: str, password: str
-) -> Optional[User]:
+) -> User | None:
     user = await users.get_by_username(username)
     if user is None:
         return None

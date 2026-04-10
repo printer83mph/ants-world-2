@@ -1,4 +1,5 @@
-from typing import AsyncGenerator, Callable
+from collections.abc import AsyncGenerator
+from typing import Callable
 
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine as sa_create_async_engine
@@ -9,7 +10,7 @@ def create_async_engine(database_url: str) -> AsyncEngine:
     return sa_create_async_engine(database_url)
 
 
-def create_async_session(engine) -> async_sessionmaker[AsyncSession]:
+def create_async_session(engine: AsyncEngine) -> async_sessionmaker[AsyncSession]:
     """Create SessionLocal class for database sessions"""
     return async_sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

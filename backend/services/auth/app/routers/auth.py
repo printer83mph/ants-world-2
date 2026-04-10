@@ -29,7 +29,7 @@ async def signup(
     # do password hashing
     hashed_password = auth.get_password_hash(request.password)
 
-    await users.create(
+    _ = await users.create(
         UserCreate(
             username=request.username,
             hashed_password=hashed_password,

@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -5,7 +7,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class BaseServiceSettings(BaseSettings):
     """Base settings class for all microservices"""
 
-    model_config = SettingsConfigDict(
+    model_config: ClassVar[SettingsConfigDict] = SettingsConfigDict(
         env_file=".env.local",
         env_file_encoding="utf-8",
         case_sensitive=False,

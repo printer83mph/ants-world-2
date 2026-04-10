@@ -7,7 +7,7 @@ from .base import TimestampedBase
 
 
 class UsersTable(TimestampedBase):
-    __tablename__ = "users"
+    __tablename__: str = "users"
 
     id: orm.Mapped[uuid.UUID] = orm.mapped_column(
         sa.UUID, default_factory=uuid.uuid4, primary_key=True

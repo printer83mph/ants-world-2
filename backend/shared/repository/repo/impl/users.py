@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional
+from typing import override
 
 from db.models import UsersTable
 from sqlalchemy import select
@@ -19,8 +19,12 @@ class UsersRepo(abstract.UsersRepo):
     def __init__(self, db: AsyncSession):
         self.db = db
 
+    @override
     async def create(self, create: UserCreate) -> User:
-        new_user = UsersTable(**create.model_dump(mode="python"))
+        new_user = UsersTable(
+            username=create.username,
+            hashed_password=create.hashed_password,
+        )
         self.db.add(new_user)
         await self.db.flush()
 
@@ -32,7 +36,8 @@ class UsersRepo(abstract.UsersRepo):
         await self.db.commit()
         return new_user_orm
 
-    async def get_by_id(self, id: uuid.UUID) -> Optional[User]:
+    @override
+    async def get_by_id(self, id: uuid.UUID) -> User | None:
         existing_user_rows = await self.db.execute(
             select(UsersTable).where(UsersTable.id == id)
         )
@@ -42,7 +47,8 @@ class UsersRepo(abstract.UsersRepo):
             return None
         return _to_model(existing_user)
 
-    async def get_by_username(self, username: str) -> Optional[User]:
+    @override
+    async def get_by_username(self, username: str) -> User | None:
         existing_user_rows = await self.db.execute(
             select(UsersTable).where(UsersTable.username == username)
         )
@@ -52,6 +58,7 @@ class UsersRepo(abstract.UsersRepo):
             return None
         return _to_model(existing_user)
 
+    @override
     async def update(self, id: uuid.UUID, update: UserUpdate) -> User:
         existing_user_rows = await self.db.execute(
             select(UsersTable).where(UsersTable.id == id)

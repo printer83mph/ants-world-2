@@ -6,12 +6,12 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, MappedAsDataclass, mapped_co
 
 
 # Base class for all models
-class Base(AsyncAttrs, DeclarativeBase, MappedAsDataclass):
+class Base(AsyncAttrs, DeclarativeBase, MappedAsDataclass):  # pyright: ignore[reportUnsafeMultipleInheritance]`
     pass
 
 
 class TimestampedBase(Base):
-    __abstract__ = True
+    __abstract__: bool = True
 
     created_at: Mapped[datetime] = mapped_column(
         sa.TIMESTAMP(timezone=True),
