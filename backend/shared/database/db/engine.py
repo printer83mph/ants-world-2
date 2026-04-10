@@ -1,4 +1,5 @@
-from typing import Callable, Generator
+from collections.abc import Generator
+from typing import Callable
 
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import Session, sessionmaker
