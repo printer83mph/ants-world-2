@@ -1,0 +1,20 @@
+[project]
+name = "auth"
+version = "0.1.0"
+description = "Auth service for ants world"
+requires-python = ">=3.12"
+dependencies = [
+    "argon2-cffi>=25.1.0",
+    "baseconfig",
+    "db",
+    "fastapi[standard]>=0.135.3",
+    "httpx>=0.28.1",
+    "passlib>=1.7.4",
+    "python-jose[cryptography]>=3.5.0",
+    "repo",
+]
+
+[tool.uv.sources]
+db = { path = "../../shared/database", editable = true }
+baseconfig = { path = "../../shared/base-config", editable = true }
+repo = { path = "../../shared/repository", editable = true }
