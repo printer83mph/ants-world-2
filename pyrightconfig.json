@@ -1,5 +1,4 @@
 {
   "typeCheckingMode": "recommended",
   "pythonVersion": "3.12",
-  "include": ["backend"],
 }
