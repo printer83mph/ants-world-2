@@ -14,3 +14,4 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["db"]
+include = ["db/py.typed"]
