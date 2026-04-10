@@ -1,15 +1,16 @@
 import uuid
 from typing import Optional
 
-from abstract import users as abstract
 from db.models import UsersTable
-from models import users as m
-from sqlalchemy import insert, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from repo.abstract import users as abstract
+from repo.models.users import User, UserCreate, UserUpdate
 
-def _to_orm(db_user: UsersTable) -> m.User:
-    return m.User.model_validate(db_user, from_attributes=True)
+
+def _to_model(db_user: UsersTable) -> User:
+    return User.model_validate(db_user, from_attributes=True)
 
 
 class UsersRepo(abstract.UsersRepo):
@@ -18,15 +19,20 @@ class UsersRepo(abstract.UsersRepo):
     def __init__(self, db: AsyncSession):
         self.db = db
 
-    async def create(self, create: m.UserCreate) -> m.User:
-        new_user_rows = await self.db.execute(
-            insert(UsersTable)
-            .values(**create.model_dump(mode="python"))
-            .returning(UsersTable)
-        )
-        return _to_orm(new_user_rows.scalars().one())
+    async def create(self, create: UserCreate) -> User:
+        new_user = UsersTable(**create.model_dump(mode="python"))
+        self.db.add(new_user)
+        await self.db.flush()
 
-    async def get_by_id(self, id: uuid.UUID) -> Optional[m.User]:
+        new_user_rows = await self.db.execute(
+            select(UsersTable).where(UsersTable.id == new_user.id)
+        )
+        new_user_orm = _to_model(new_user_rows.scalar_one())
+
+        await self.db.commit()
+        return new_user_orm
+
+    async def get_by_id(self, id: uuid.UUID) -> Optional[User]:
         existing_user_rows = await self.db.execute(
             select(UsersTable).where(UsersTable.id == id)
         )
@@ -34,9 +40,9 @@ class UsersRepo(abstract.UsersRepo):
 
         if existing_user is None:
             return None
-        return _to_orm(existing_user)
+        return _to_model(existing_user)
 
-    async def get_by_username(self, username: str) -> Optional[m.User]:
+    async def get_by_username(self, username: str) -> Optional[User]:
         existing_user_rows = await self.db.execute(
             select(UsersTable).where(UsersTable.username == username)
         )
@@ -44,9 +50,9 @@ class UsersRepo(abstract.UsersRepo):
 
         if existing_user is None:
             return None
-        return _to_orm(existing_user)
+        return _to_model(existing_user)
 
-    async def update(self, id: uuid.UUID, update: m.UserUpdate) -> m.User:
+    async def update(self, id: uuid.UUID, update: UserUpdate) -> User:
         existing_user_rows = await self.db.execute(
             select(UsersTable).where(UsersTable.id == id)
         )
@@ -66,4 +72,4 @@ class UsersRepo(abstract.UsersRepo):
         )
         updated_user = updated_user_rows.scalars().one()
 
-        return _to_orm(updated_user)
+        return _to_model(updated_user)

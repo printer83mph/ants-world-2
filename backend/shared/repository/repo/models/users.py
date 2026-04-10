@@ -1,22 +1,22 @@
 import uuid
-from typing import Optional
+from datetime import datetime
 
-import pydantic as pd
+from pydantic import BaseModel, Field
 
 
-class User(pd.BaseModel):
-    model_config = pd.ConfigDict(from_attributes=True)
-
+class User(BaseModel):
     id: uuid.UUID
     username: str
     hashed_password: str
+    created_at: datetime
+    updated_at: datetime
 
 
-class UserCreate(pd.BaseModel):
-    username: str = pd.Field(max_length=32)
+class UserCreate(BaseModel):
+    username: str = Field(max_length=32)
     hashed_password: str
 
 
-class UserUpdate(pd.BaseModel):
-    username: str = pd.Field(max_length=32, default="")
+class UserUpdate(BaseModel):
+    username: str = Field(max_length=32, default="")
     hashed_password: str = ""

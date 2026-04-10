@@ -4,8 +4,8 @@ version = "0.1.0"
 description = "Shared repository module for abstracted data access"
 requires-python = ">=3.12"
 dependencies = [
+    "asyncpg>=0.31.0",
     "db",
-    "psycopg2-binary>=2.9.11",
     "pydantic>=2.12.5",
     "sqlalchemy>=2.0.49",
 ]

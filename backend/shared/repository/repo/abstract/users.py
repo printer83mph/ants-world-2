@@ -2,7 +2,7 @@ import abc
 import uuid
 from typing import Optional
 
-from models.users import User, UserCreate, UserUpdate
+from repo.models.users import User, UserCreate, UserUpdate
 
 
 class UsersRepo(abc.ABC):
