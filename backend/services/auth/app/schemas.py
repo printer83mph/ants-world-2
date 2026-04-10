@@ -1,6 +1,5 @@
 import uuid
 from datetime import datetime
-from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -11,7 +10,7 @@ class SignupRequest(BaseModel):
 
 
 class BaseResponse(BaseModel):
-    message: Optional[str] = None
+    message: str | None = None
 
 
 class TokenResponse(BaseResponse):

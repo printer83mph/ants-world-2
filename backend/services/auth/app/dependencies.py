@@ -1,4 +1,5 @@
-from typing import Annotated, Generator
+from collections.abc import Generator
+from typing import Annotated
 
 import db.engine_async as engine
 from fastapi import Depends, HTTPException, Request, status
