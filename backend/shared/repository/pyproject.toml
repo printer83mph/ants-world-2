@@ -6,7 +6,10 @@ requires-python = ">=3.12"
 dependencies = [
     "asyncpg>=0.31.0",
     "db",
+    "numpy>=2.4.4",
+    "protobuf>=7.34.1",
     "pydantic>=2.12.5",
+    "redis>=7.4.0",
     "sqlalchemy>=2.0.49",
 ]
 

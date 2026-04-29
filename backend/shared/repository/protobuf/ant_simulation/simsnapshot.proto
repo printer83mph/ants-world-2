@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package ant_simulation;
+
+message SimSnapshot {
+  string id = 1;
+
+  // Ant data
+  repeated bytes ant_ids = 2;
+  repeated AntState ants = 3;
+
+  // Crumb data
+  repeated CrumbState crumbs = 4;
+
+  // Unix timestamps, in milliseconds
+  int64 created_at = 5;
+  int64 updated_at = 6;
+}
+
+message AntState {
+  // Position: (x, y)
+  double x = 1;
+  double y = 2;
+
+  // Rotation angle in radians
+  double rotation = 3;
+
+  // Ant genetics
+  double pheremone_sensitivity = 4;
+  double pheremone_strength = 5;
+  double speed = 6;
+  double seconds_of_life_left = 7;
+}
+
+message CrumbState {
+  // Position: (x, y)
+  double x = 1;
+  double y = 2;
+
+  // Size/amount of crumb
+  double size = 3;
+}
