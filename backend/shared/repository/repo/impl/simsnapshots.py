@@ -79,15 +79,15 @@ class SimSnapshotsRepo(abstract.SimSnapshotsRepo):
         self.redis: redis.Redis = redis_engine
 
     @override
-    def create(self, create: SimSnapshotCreate) -> SimSnapshot:
+    def publish(self, create: SimSnapshotCreate) -> SimSnapshot:
         raise NotImplementedError()
 
     @override
-    def get_latest_x(self, count: int) -> Sequence[SimSnapshot]:
+    async def get_next(self, timeout: float = 1.0) -> SimSnapshot:
         raise NotImplementedError()
 
     @override
-    def get_by_id(self, id: uuid.UUID) -> SimSnapshot | None:
+    def get_last_x(self, count: int) -> Sequence[SimSnapshot]:
         raise NotImplementedError()
 
     @override
