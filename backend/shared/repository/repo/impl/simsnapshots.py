@@ -132,31 +132,31 @@ class SimSnapshotsRepo(abstract.SimSnapshotsRepo):
 
         # add to list and publish!
         _ = self.redis.lpush(REDIS_LIST, serialized)
-        _ = self.redis.publish(REDIS_PUBSUB, serialized)
+        _ = self.redis.publish(REDIS_PUBSUB, serialized)  # pyright: ignore[reportUnknownMemberType]
         if cast(int, self.redis.llen(REDIS_LIST)) > 20:
             # save last 30 snapshots, discard older ones
-            self.redis.lpop(REDIS_LIST, 1)
+            _ = self.redis.lpop(REDIS_LIST, 1)  # pyright: ignore[reportUnknownMemberType, reportUnknownVariableType]
 
         return full_snapshot
 
     @override
     def subscribe(self) -> Iterator[SimSnapshot]:
-        p = self.redis.pubsub()
-        p.subscribe(REDIS_PUBSUB)
+        p = self.redis.pubsub()  # pyright: ignore[reportUnknownMemberType]
+        p.subscribe(REDIS_PUBSUB)  # pyright: ignore[reportUnknownMemberType]
 
         try:
-            for message in p.listen():
+            for message in p.listen():  # pyright: ignore[reportUnknownVariableType]
                 assert isinstance(message["data"], bytes)
-                yield _to_model(cast(bytes, message["data"]))
+                yield _to_model(message["data"])
 
         finally:
-            p.unsubscribe(REDIS_PUBSUB)
+            p.unsubscribe(REDIS_PUBSUB)  # pyright: ignore[reportUnknownMemberType]
 
     @override
     def get_last_x(self, count: int) -> Sequence[SimSnapshot]:
         serialized_snapshots = cast(
             list[bytes],
-            self.redis.lrange(REDIS_LIST, 0, count - 1),
+            self.redis.lrange(REDIS_LIST, 0, count - 1),  # pyright: ignore[reportUnknownMemberType]
         )
         return [_to_model(snapshot) for snapshot in serialized_snapshots]
 
