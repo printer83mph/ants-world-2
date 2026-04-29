@@ -29,3 +29,11 @@ typeCheckingMode = "recommended"
 extraPaths = [
     "../database",
 ]
+exclude = [
+    "protopy",
+]
+
+[tool.ruff]
+exclude = [
+    "protopy",
+]

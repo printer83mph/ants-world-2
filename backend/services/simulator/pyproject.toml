@@ -14,3 +14,11 @@ dependencies = [
 repo = { path = "../../shared/repository", editable = true }
 db = { path = "../../shared/database", editable = true }
 baseconfig = { path = "../../shared/base-config", editable = true }
+
+[tool.basedpyright]
+typeCheckingMode = "recommended"
+extraPaths = [
+    "../../shared/base-config",
+    "../../shared/database",
+    "../../shared/repository",
+]

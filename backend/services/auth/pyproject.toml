@@ -26,3 +26,8 @@ extraPaths = [
     "../../shared/database",
     "../../shared/repository",
 ]
+
+[dependency-groups]
+dev = [
+    "types-passlib>=1.7.7.20260211",
+]

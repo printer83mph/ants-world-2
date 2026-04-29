@@ -3,6 +3,7 @@ import random
 from collections import defaultdict
 from collections.abc import Iterator
 from datetime import datetime, timezone
+from typing import cast
 
 import numpy as np
 import redis
@@ -13,7 +14,7 @@ from repo.models.simsnapshots import SimSnapshot, SimSnapshotCreate
 class Simulator:
     def __init__(self, *, redis_url: str):
         redis_engine = redis.from_url(redis_url)
-        self.repo = SimSnapshotsRepo(redis_engine)
+        self.repo: SimSnapshotsRepo = SimSnapshotsRepo(redis_engine)
 
         # attempt to fetch last snapshot
         last_snapshots = self.repo.get_last_x(1)
@@ -21,7 +22,7 @@ class Simulator:
         # seed snapshot if not exists (empty)
         if len(last_snapshots) == 0:
             logging.debug("Last snapshot not found! Initializing empty arrays.")
-            self.last_snapshot = SimSnapshot(
+            self.last_snapshot: SimSnapshot = SimSnapshot(
                 created_at=datetime.now(tz=timezone.utc),
                 ant_ids=np.array([], np.bytes_),
                 ant_positions=np.empty((0, 2), dtype=np.float64),
@@ -47,8 +48,8 @@ class Simulator:
 
     def _get_bucket(self, x: float, y: float) -> tuple[int, int]:
         return (
-            int(np.floor(x / Simulator.BUCKET_SIZE)),
-            int(np.floor(y / Simulator.BUCKET_SIZE)),
+            int(cast(float, np.floor(x / Simulator.BUCKET_SIZE))),
+            int(cast(float, np.floor(y / Simulator.BUCKET_SIZE))),
         )
 
     def _nearby_buckets(
@@ -65,12 +66,16 @@ class Simulator:
         snapshot = self.last_snapshot
 
         bucketed_crumb_idxs: dict[tuple[int, int], list[int]] = defaultdict(list)
-        for idx, (x, y) in enumerate(snapshot.crumb_positions):
-            bucketed_crumb_idxs[self._get_bucket(x, y)].append(idx)
+        for idx, position in enumerate(snapshot.crumb_positions):
+            bucketed_crumb_idxs[
+                self._get_bucket(cast(float, position[0]), cast(float, position[1]))
+            ].append(idx)
 
         bucketed_pheremone_idxs: dict[tuple[int, int], list[int]] = defaultdict(list)
-        for idx, (x, y) in enumerate(snapshot.pheremone_positions):
-            bucketed_pheremone_idxs[self._get_bucket(x, y)].append(idx)
+        for idx, position in enumerate(snapshot.pheremone_positions):
+            bucketed_pheremone_idxs[
+                self._get_bucket(cast(float, position[0]), cast(float, position[1]))
+            ].append(idx)
 
         new_crumb_sizes = np.copy(snapshot.crumb_sizes)
 
@@ -83,31 +88,33 @@ class Simulator:
         ant_seconds_of_life_left: list[float] = []
 
         for ant_idx in range(len(snapshot.ant_ids)):
-            ant_id = snapshot.ant_ids[ant_idx]
-            x, y = snapshot.ant_positions[ant_idx]
-            rotation = snapshot.ant_rotations[ant_idx]
-            pheremone_sensitivity = snapshot.ant_pheremone_sensitivities[ant_idx]
-            pheremone_strength = snapshot.ant_pheremone_strengths[ant_idx]
-            speed = snapshot.ant_speeds[ant_idx]
-            seconds_of_life_left = snapshot.ant_seconds_of_life_left[ant_idx]
+            ant_id = cast(bytes, snapshot.ant_ids[ant_idx])
+            x, y = cast(tuple[float, float], snapshot.ant_positions[ant_idx])
+            rotation = cast(float, snapshot.ant_rotations[ant_idx])
+            pheremone_sensitivity = cast(
+                float, snapshot.ant_pheremone_sensitivities[ant_idx]
+            )
+            pheremone_strength = cast(float, snapshot.ant_pheremone_strengths[ant_idx])
+            speed = cast(float, snapshot.ant_speeds[ant_idx])
+            seconds_of_life_left = cast(
+                float, snapshot.ant_seconds_of_life_left[ant_idx]
+            )
 
             # get nearby bucketed pheremones
-            nearby_pheremone_idxs = []
+            nearby_pheremone_idxs: list[int] = []
             for bucket in self._nearby_buckets(x, y, pheremone_sensitivity):
                 nearby_pheremone_idxs.extend(bucketed_pheremone_idxs[bucket])
 
             # get nearby crumbs
-            nearby_crumb_idxs = []
+            nearby_crumb_idxs: list[int] = []
             for bucket in self._nearby_buckets(x, y, pheremone_sensitivity):
                 nearby_crumb_idxs.extend(bucketed_crumb_idxs[bucket])
 
             random_rotation = (random.random() - 0.5) * 2
             new_rotation = rotation + random_rotation
 
-            new_x, new_y = (
-                x + np.cos(new_rotation) * speed * dt,
-                y + np.sin(new_rotation) * speed * dt,
-            )
+            new_x = cast(float, x + np.cos(new_rotation) * speed * dt)
+            new_y = cast(float, y + np.sin(new_rotation) * speed * dt)
 
             if seconds_of_life_left - dt > 0:
                 ant_ids.append(ant_id)
