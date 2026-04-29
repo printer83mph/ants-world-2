@@ -23,36 +23,36 @@ def _to_model(serialized_snapshot: bytes) -> SimSnapshot:
         # ants
         ant_ids=np.array(sim_snapshot.ant_ids, "S16"),
         ant_positions=np.array(
-            ([ant.x, ant.y] for ant in sim_snapshot.ants), np.float64
+            [[ant.x, ant.y] for ant in sim_snapshot.ants], np.float64
         ),
-        ant_rotations=np.array((ant.rotation for ant in sim_snapshot.ants), np.float64),
+        ant_rotations=np.array([ant.rotation for ant in sim_snapshot.ants], np.float64),
         ant_pheremone_sensitivities=np.array(
-            (ant.pheremone_sensitivity for ant in sim_snapshot.ants), np.float64
+            [ant.pheremone_sensitivity for ant in sim_snapshot.ants], np.float64
         ),
         ant_pheremone_strengths=np.array(
-            (ant.pheremone_strength for ant in sim_snapshot.ants), np.float64
+            [ant.pheremone_strength for ant in sim_snapshot.ants], np.float64
         ),
-        ant_speeds=np.array((ant.speed for ant in sim_snapshot.ants), np.float64),
+        ant_speeds=np.array([ant.speed for ant in sim_snapshot.ants], np.float64),
         ant_seconds_of_life_left=np.array(
-            (ant.seconds_of_life_left for ant in sim_snapshot.ants), np.float64
+            [ant.seconds_of_life_left for ant in sim_snapshot.ants], np.float64
         ),
         #
         # pheremones
         pheremone_positions=np.array(
-            ([pher.x, pher.y] for pher in sim_snapshot.pheremones), np.float64
+            [[pher.x, pher.y] for pher in sim_snapshot.pheremones], np.float64
         ),
         pheremone_is_leaving_home=np.array(
-            (pher.is_leaving_home for pher in sim_snapshot.pheremones), np.bool
+            [pher.is_leaving_home for pher in sim_snapshot.pheremones], np.bool_
         ),
         pheremone_seconds_of_life_left=np.array(
-            (pher.seconds_of_life_left for pher in sim_snapshot.pheremones), np.float64
+            [pher.seconds_of_life_left for pher in sim_snapshot.pheremones], np.float64
         ),
         #
         # crumbs
         crumb_positions=np.array(
-            ([crumb.x, crumb.y] for crumb in sim_snapshot.crumbs), np.float64
+            [[crumb.x, crumb.y] for crumb in sim_snapshot.crumbs], np.float64
         ),
-        crumb_sizes=np.array((crumb.size for crumb in sim_snapshot.crumbs), np.float64),
+        crumb_sizes=np.array([crumb.size for crumb in sim_snapshot.crumbs], np.float64),
         #
         # metadata
         created_at=datetime.fromtimestamp(sim_snapshot.created_at),
@@ -114,7 +114,18 @@ class SimSnapshotsRepo(abstract.SimSnapshotsRepo):
         created_at = datetime.now(tz=timezone.utc)
         full_snapshot = SimSnapshot(
             created_at=created_at,
-            **create.__dict__,  # pyright: ignore[reportAny]
+            ant_ids=create.ant_ids,
+            ant_positions=create.ant_positions,
+            ant_rotations=create.ant_rotations,
+            ant_pheremone_sensitivities=create.ant_pheremone_sensitivities,
+            ant_pheremone_strengths=create.ant_pheremone_strengths,
+            ant_speeds=create.ant_speeds,
+            ant_seconds_of_life_left=create.ant_seconds_of_life_left,
+            pheremone_positions=create.pheremone_positions,
+            pheremone_is_leaving_home=create.pheremone_is_leaving_home,
+            pheremone_seconds_of_life_left=create.pheremone_seconds_of_life_left,
+            crumb_positions=create.crumb_positions,
+            crumb_sizes=create.crumb_sizes,
         )
 
         serialized = _to_bytes(full_snapshot)

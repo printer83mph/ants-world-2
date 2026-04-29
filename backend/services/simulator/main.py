@@ -1,3 +1,4 @@
+import logging
 import time
 
 from app.config import settings
@@ -5,7 +6,10 @@ from app.simulator import Simulator
 
 
 def main():
-    sim = Simulator(settings.redis_url)
+    if settings.debug:
+        logging.basicConfig(level=logging.DEBUG)
+
+    sim = Simulator(redis_url=settings.redis_url)
     dt = settings.fixed_dt
 
     while True:

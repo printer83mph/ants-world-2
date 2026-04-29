@@ -3,10 +3,14 @@ from collections.abc import Mapping
 from datetime import datetime
 
 import numpy as np
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class BaseSimSnapshot(BaseModel):
+    model_config = ConfigDict(  # pyright: ignore[reportUnannotatedClassAttribute]
+        arbitrary_types_allowed=True,
+    )
+
     # all of these ant_ arrays share indexing
     ant_ids: np.ndarray[tuple[int], np.dtype[np.bytes_]]
     ant_positions: np.ndarray[tuple[int, int], np.dtype[np.float64]]
