@@ -55,7 +55,7 @@ def _to_model(serialized_snapshot: bytes) -> SimSnapshot:
         crumb_sizes=np.array([crumb.size for crumb in sim_snapshot.crumbs], np.float64),
         #
         # metadata
-        created_at=datetime.fromtimestamp(sim_snapshot.created_at),
+        created_at=datetime.fromtimestamp(sim_snapshot.created_at, tz=timezone.utc),
     )
 
 
@@ -135,7 +135,7 @@ class SimSnapshotsRepo(abstract.SimSnapshotsRepo):
         _ = self.redis.publish(REDIS_PUBSUB, serialized)  # pyright: ignore[reportUnknownMemberType]
         if cast(int, self.redis.llen(REDIS_LIST)) > 20:
             # save last 30 snapshots, discard older ones
-            _ = self.redis.lpop(REDIS_LIST, 1)  # pyright: ignore[reportUnknownMemberType, reportUnknownVariableType]
+            _ = self.redis.rpop(REDIS_LIST, 1)  # pyright: ignore[reportUnknownMemberType, reportUnknownVariableType]
 
         return full_snapshot
 
@@ -154,6 +154,10 @@ class SimSnapshotsRepo(abstract.SimSnapshotsRepo):
 
     @override
     def get_last_x(self, count: int) -> Sequence[SimSnapshot]:
+        """
+        Gets the last x snapshots in time.
+        These will be in descending time order, with the most recent first.
+        """
         serialized_snapshots = cast(
             list[bytes],
             self.redis.lrange(REDIS_LIST, 0, count - 1),  # pyright: ignore[reportUnknownMemberType]

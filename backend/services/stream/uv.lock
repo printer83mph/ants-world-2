@@ -1010,7 +1010,6 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "baseconfig" },
-    { name = "db" },
     { name = "fastapi", extra = ["standard"] },
     { name = "httpx" },
     { name = "repo" },
@@ -1019,7 +1018,6 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "baseconfig", editable = "../../shared/base-config" },
-    { name = "db", editable = "../../shared/database" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.136.1" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "repo", editable = "../../shared/repository" },

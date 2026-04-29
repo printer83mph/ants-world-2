@@ -5,7 +5,6 @@ description = "Streaming service for antsworld"
 requires-python = ">=3.12"
 dependencies = [
     "baseconfig",
-    "db",
     "fastapi[standard]>=0.136.1",
     "httpx>=0.28.1",
     "repo",
@@ -14,12 +13,10 @@ dependencies = [
 [tool.uv.sources]
 baseconfig = { path = "../../shared/base-config", editable = true }
 repo = { path = "../../shared/repository", editable = true }
-db = { path = "../../shared/database", editable = true }
 
 [tool.basedpyright]
 typeCheckingMode = "recommended"
 extraPaths = [
     "../../shared/base-config",
-    "../../shared/database",
     "../../shared/repository",
 ]
