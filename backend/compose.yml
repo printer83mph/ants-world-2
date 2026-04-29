@@ -21,6 +21,23 @@ services:
       - ./services/auth/main.py:/services/app/main.py:ro
       - ./shared:/shared:ro
 
+  simulator-service:
+    build:
+      context: .
+      dockerfile: ./services/simulator/Dockerfile
+    command: uv run main.py
+    env_file:
+      - ./services/simulator/.docker.env
+    expose:
+      - "8000"
+    restart: unless-stopped
+    depends_on:
+      - redis
+    volumes:
+      - ./services/simulator/app:/services/app/app:ro
+      - ./services/simulator/main.py:/services/app/main.py:ro
+      - ./shared:/shared:ro
+
   nginx:
     image: nginx:stable-alpine
     volumes:
@@ -53,6 +70,21 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data # Persist data with a volume
 
+  redis:
+    image: redis:7-alpine
+    expose:
+      - "6379"
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    volumes:
+      - redis_data:/data
+
   pgadmin:
     build: ./utilities/pgadmin
     attach: false
@@ -83,3 +115,4 @@ services:
 volumes:
   db_data:
   pgadmin_data:
+  redis_data:

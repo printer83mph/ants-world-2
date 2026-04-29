@@ -13,6 +13,7 @@ jobs:
     env:
       BACKEND_PROJECT_PATHS: |
         backend/services/auth
+        backend/services/simulator
         backend/shared/base-config
         backend/shared/database
         backend/shared/repository
