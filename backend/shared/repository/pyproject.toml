@@ -30,7 +30,10 @@ extraPaths = [
     "../database",
 ]
 exclude = [
+    ".venv",
     "protopy",
+    "__pycache__",
+    ".git",
 ]
 
 [tool.ruff]

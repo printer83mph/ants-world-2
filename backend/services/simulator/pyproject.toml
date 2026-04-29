@@ -22,3 +22,6 @@ extraPaths = [
     "../../shared/database",
     "../../shared/repository",
 ]
+exclude = [
+    ".venv"
+]
