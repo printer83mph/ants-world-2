@@ -23,7 +23,6 @@ class BaseSimSnapshot(BaseModel):
 
 
 class SimSnapshot(BaseSimSnapshot):
-    id: uuid.UUID
     created_at: datetime
 
     # for caching!
@@ -31,4 +30,4 @@ class SimSnapshot(BaseSimSnapshot):
 
 
 class SimSnapshotCreate(BaseSimSnapshot):
-    pass
+    created_at: datetime

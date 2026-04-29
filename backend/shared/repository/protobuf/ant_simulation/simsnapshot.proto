@@ -3,7 +3,8 @@ syntax = "proto3";
 package ant_simulation;
 
 message SimSnapshot {
-  string id = 1;
+  // Unix timestamp, in milliseconds
+  int64 created_at = 1;
 
   // Ant data
   repeated bytes ant_ids = 2;
@@ -11,9 +12,6 @@ message SimSnapshot {
 
   // Crumb data
   repeated CrumbState crumbs = 4;
-
-  // Unix timestamp, in milliseconds
-  int64 created_at = 5;
 }
 
 message AntState {

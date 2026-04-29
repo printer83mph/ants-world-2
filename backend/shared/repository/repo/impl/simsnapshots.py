@@ -1,6 +1,6 @@
 import uuid
 from collections.abc import Sequence
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import override
 
 import numpy as np
@@ -20,7 +20,6 @@ def _to_model(serialized_snapshot: bytes) -> SimSnapshot:
     _ = sim_snapshot.ParseFromString(serialized_snapshot)
 
     return SimSnapshot(
-        id=uuid.UUID(sim_snapshot.id),
         ant_ids=np.array(sim_snapshot.ant_ids, "S16"),
         ant_positions=np.array(
             ([ant.x, ant.y] for ant in sim_snapshot.ants), np.float64
@@ -50,7 +49,6 @@ def _to_bytes(model: SimSnapshot) -> bytes:
     """
 
     sim_snapshot = simsnapshot_pb2.SimSnapshot()
-    sim_snapshot.id = str(model.id)
     sim_snapshot.ant_ids.extend(model.ant_ids.astype(str))
 
     for position in model.ant_positions:
