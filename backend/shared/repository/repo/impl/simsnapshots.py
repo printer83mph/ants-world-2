@@ -1,7 +1,7 @@
 import uuid
-from collections.abc import Sequence
+from collections.abc import Iterator, Sequence
 from datetime import datetime, timezone
-from typing import override
+from typing import cast, override
 
 import numpy as np
 import redis
@@ -74,22 +74,60 @@ def _to_bytes(model: SimSnapshot) -> bytes:
     return sim_snapshot.SerializeToString()
 
 
+REDIS_LIST = "simsnapshots"
+REDIS_PUBSUB = "simsnapshots"
+
+
 class SimSnapshotsRepo(abstract.SimSnapshotsRepo):
     def __init__(self, redis_engine: redis.Redis):
         self.redis: redis.Redis = redis_engine
 
     @override
     def publish(self, create: SimSnapshotCreate) -> SimSnapshot:
-        raise NotImplementedError()
+        created_at = datetime.now(tz=timezone.utc)
+        full_snapshot = SimSnapshot(
+            created_at=created_at,
+            **create.__dict__,  # pyright: ignore[reportAny]
+        )
+
+        serialized = _to_bytes(full_snapshot)
+
+        # add to list and publish!
+        _ = self.redis.lpush(REDIS_LIST, serialized)
+        _ = self.redis.publish(REDIS_PUBSUB, serialized)
+        if cast(int, self.redis.llen(REDIS_LIST)) > 20:
+            # save last 30 snapshots, discard older ones
+            self.redis.lpop(REDIS_LIST, 1)
+
+        return full_snapshot
 
     @override
-    async def get_next(self, timeout: float = 1.0) -> SimSnapshot:
-        raise NotImplementedError()
+    def subscribe(self) -> Iterator[SimSnapshot]:
+        p = self.redis.pubsub()
+        p.subscribe(REDIS_PUBSUB)
+
+        try:
+            for message in p.listen():
+                assert isinstance(message["data"], bytes)
+                yield _to_model(cast(bytes, message["data"]))
+
+        finally:
+            p.unsubscribe(REDIS_PUBSUB)
 
     @override
     def get_last_x(self, count: int) -> Sequence[SimSnapshot]:
-        raise NotImplementedError()
+        serialized_snapshots = cast(
+            list[bytes],
+            self.redis.lrange(REDIS_LIST, 0, count - 1),
+        )
+        return [_to_model(snapshot) for snapshot in serialized_snapshots]
 
     @override
     def get_ant_index_by_id(self, snapshot: SimSnapshot, id: uuid.UUID) -> int | None:
-        raise NotImplementedError()
+        if snapshot._id_to_index is None:  # pyright: ignore[reportPrivateUsage]
+            snapshot._id_to_index = dict(  # pyright: ignore[reportPrivateUsage]
+                (uuid.UUID(bytes=ant_id_bytes), idx)
+                for idx, ant_id_bytes in enumerate(snapshot.ant_ids)
+            )
+
+        return snapshot._id_to_index.get(id, None)  # pyright: ignore[reportPrivateUsage]

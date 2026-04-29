@@ -1,6 +1,6 @@
 import abc
 import uuid
-from collections.abc import Sequence
+from collections.abc import Iterator, Sequence
 
 from repo.models.simsnapshots import SimSnapshot, SimSnapshotCreate
 
@@ -10,7 +10,7 @@ class SimSnapshotsRepo(abc.ABC):
     def publish(self, create: SimSnapshotCreate) -> SimSnapshot: ...
 
     @abc.abstractmethod
-    async def get_next(self, timeout: float = 1.0) -> SimSnapshot: ...
+    def subscribe(self) -> Iterator[SimSnapshot]: ...
 
     @abc.abstractmethod
     def get_last_x(self, count: int) -> Sequence[SimSnapshot]: ...
