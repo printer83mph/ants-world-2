@@ -1,0 +1,16 @@
+[project]
+name = "simulator"
+version = "0.1.0"
+description = "Ant Simulator service for ants world"
+requires-python = ">=3.12"
+dependencies = [
+    "baseconfig",
+    "db",
+    "numpy>=2.4.4",
+    "repo",
+]
+
+[tool.uv.sources]
+repo = { path = "../../shared/repository", editable = true }
+db = { path = "../../shared/database", editable = true }
+baseconfig = { path = "../../shared/base-config", editable = true }
