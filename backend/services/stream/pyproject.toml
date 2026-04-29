@@ -1,0 +1,22 @@
+[project]
+name = "stream"
+version = "0.1.0"
+description = "Streaming service for antsworld"
+requires-python = ">=3.12"
+dependencies = [
+    "baseconfig",
+    "fastapi[standard]>=0.136.1",
+    "httpx>=0.28.1",
+    "repo",
+]
+
+[tool.uv.sources]
+baseconfig = { path = "../../shared/base-config", editable = true }
+repo = { path = "../../shared/repository", editable = true }
+
+[tool.basedpyright]
+typeCheckingMode = "recommended"
+extraPaths = [
+    "../../shared/base-config",
+    "../../shared/repository",
+]

@@ -15,6 +15,7 @@ class BaseSimSnapshot(BaseModel):
     ant_ids: np.ndarray[tuple[int], np.dtype[np.bytes_]]
     ant_positions: np.ndarray[tuple[int, int], np.dtype[np.float64]]
     ant_rotations: np.ndarray[tuple[int], np.dtype[np.float64]]
+    # TODO: need is_leaving_home bool state
 
     ant_pheremone_sensitivities: np.ndarray[tuple[int], np.dtype[np.float64]]
     ant_pheremone_strengths: np.ndarray[tuple[int], np.dtype[np.float64]]

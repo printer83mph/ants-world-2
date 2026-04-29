@@ -110,6 +110,9 @@ class Simulator:
             for bucket in self._nearby_buckets(x, y, pheremone_sensitivity):
                 nearby_crumb_idxs.extend(bucketed_crumb_idxs[bucket])
 
+            # TODO: weigh rotation based on nearby crumbs and pheremones
+            # TODO: leave behind pheremones based on current state
+
             random_rotation = (random.random() - 0.5) * 2
             new_rotation = rotation + random_rotation
 
