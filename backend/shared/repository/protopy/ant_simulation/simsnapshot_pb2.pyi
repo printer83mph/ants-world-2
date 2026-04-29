@@ -7,20 +7,18 @@ from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class SimSnapshot(_message.Message):
-    __slots__ = ("id", "ant_ids", "ants", "crumbs", "created_at", "updated_at")
+    __slots__ = ("id", "ant_ids", "ants", "crumbs", "created_at")
     ID_FIELD_NUMBER: _ClassVar[int]
     ANT_IDS_FIELD_NUMBER: _ClassVar[int]
     ANTS_FIELD_NUMBER: _ClassVar[int]
     CRUMBS_FIELD_NUMBER: _ClassVar[int]
     CREATED_AT_FIELD_NUMBER: _ClassVar[int]
-    UPDATED_AT_FIELD_NUMBER: _ClassVar[int]
     id: str
     ant_ids: _containers.RepeatedScalarFieldContainer[bytes]
     ants: _containers.RepeatedCompositeFieldContainer[AntState]
     crumbs: _containers.RepeatedCompositeFieldContainer[CrumbState]
     created_at: int
-    updated_at: int
-    def __init__(self, id: _Optional[str] = ..., ant_ids: _Optional[_Iterable[bytes]] = ..., ants: _Optional[_Iterable[_Union[AntState, _Mapping]]] = ..., crumbs: _Optional[_Iterable[_Union[CrumbState, _Mapping]]] = ..., created_at: _Optional[int] = ..., updated_at: _Optional[int] = ...) -> None: ...
+    def __init__(self, id: _Optional[str] = ..., ant_ids: _Optional[_Iterable[bytes]] = ..., ants: _Optional[_Iterable[_Union[AntState, _Mapping]]] = ..., crumbs: _Optional[_Iterable[_Union[CrumbState, _Mapping]]] = ..., created_at: _Optional[int] = ...) -> None: ...
 
 class AntState(_message.Message):
     __slots__ = ("x", "y", "rotation", "pheremone_sensitivity", "pheremone_strength", "speed", "seconds_of_life_left")

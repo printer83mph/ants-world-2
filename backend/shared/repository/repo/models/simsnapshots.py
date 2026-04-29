@@ -25,7 +25,6 @@ class BaseSimSnapshot(BaseModel):
 class SimSnapshot(BaseSimSnapshot):
     id: uuid.UUID
     created_at: datetime
-    updated_at: datetime
 
     # for caching!
     _id_to_index: Mapping[uuid.UUID, int] | None = None

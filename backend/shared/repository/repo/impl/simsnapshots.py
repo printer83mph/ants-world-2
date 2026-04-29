@@ -41,7 +41,6 @@ def _to_model(serialized_snapshot: bytes) -> SimSnapshot:
         ),
         crumb_sizes=np.array((crumb.size for crumb in sim_snapshot.crumbs), np.float64),
         created_at=datetime.fromtimestamp(sim_snapshot.created_at),
-        updated_at=datetime.fromtimestamp(sim_snapshot.updated_at),
     )
 
 
@@ -73,7 +72,6 @@ def _to_bytes(model: SimSnapshot) -> bytes:
         crumb.size = float(crumb_size)
 
     sim_snapshot.created_at = int(model.created_at.timestamp())
-    sim_snapshot.updated_at = int(model.updated_at.timestamp())
 
     return sim_snapshot.SerializeToString()
 
