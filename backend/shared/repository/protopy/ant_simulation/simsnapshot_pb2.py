@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n ant_simulation/simsnapshot.proto\x12\x0e\x61nt_simulation\"\x86\x01\n\x0bSimSnapshot\x12\x12\n\ncreated_at\x18\x01 \x01(\x03\x12\x0f\n\x07\x61nt_ids\x18\x02 \x03(\x0c\x12&\n\x04\x61nts\x18\x03 \x03(\x0b\x32\x18.ant_simulation.AntState\x12*\n\x06\x63rumbs\x18\x04 \x03(\x0b\x32\x1a.ant_simulation.CrumbState\"\x9a\x01\n\x08\x41ntState\x12\t\n\x01x\x18\x01 \x01(\x01\x12\t\n\x01y\x18\x02 \x01(\x01\x12\x10\n\x08rotation\x18\x03 \x01(\x01\x12\x1d\n\x15pheremone_sensitivity\x18\x04 \x01(\x01\x12\x1a\n\x12pheremone_strength\x18\x05 \x01(\x01\x12\r\n\x05speed\x18\x06 \x01(\x01\x12\x1c\n\x14seconds_of_life_left\x18\x07 \x01(\x01\"0\n\nCrumbState\x12\t\n\x01x\x18\x01 \x01(\x01\x12\t\n\x01y\x18\x02 \x01(\x01\x12\x0c\n\x04size\x18\x03 \x01(\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n ant_simulation/simsnapshot.proto\x12\x0e\x61nt_simulation\"\xba\x01\n\x0bSimSnapshot\x12\x12\n\ncreated_at\x18\x01 \x01(\x03\x12\x0f\n\x07\x61nt_ids\x18\x02 \x03(\x0c\x12&\n\x04\x61nts\x18\x03 \x03(\x0b\x32\x18.ant_simulation.AntState\x12\x32\n\npheremones\x18\x04 \x03(\x0b\x32\x1e.ant_simulation.PheremoneState\x12*\n\x06\x63rumbs\x18\x05 \x03(\x0b\x32\x1a.ant_simulation.CrumbState\"\x9a\x01\n\x08\x41ntState\x12\t\n\x01x\x18\x01 \x01(\x01\x12\t\n\x01y\x18\x02 \x01(\x01\x12\x10\n\x08rotation\x18\x03 \x01(\x01\x12\x1d\n\x15pheremone_sensitivity\x18\x04 \x01(\x01\x12\x1a\n\x12pheremone_strength\x18\x05 \x01(\x01\x12\r\n\x05speed\x18\x06 \x01(\x01\x12\x1c\n\x14seconds_of_life_left\x18\x07 \x01(\x01\"]\n\x0ePheremoneState\x12\t\n\x01x\x18\x01 \x01(\x01\x12\t\n\x01y\x18\x02 \x01(\x01\x12\x17\n\x0fis_leaving_home\x18\x03 \x01(\x08\x12\x1c\n\x14seconds_of_life_left\x18\x04 \x01(\x01\"0\n\nCrumbState\x12\t\n\x01x\x18\x01 \x01(\x01\x12\t\n\x01y\x18\x02 \x01(\x01\x12\x0c\n\x04size\x18\x03 \x01(\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -32,9 +32,11 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'ant_simulation.simsnapshot_
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
   _globals['_SIMSNAPSHOT']._serialized_start=53
-  _globals['_SIMSNAPSHOT']._serialized_end=187
-  _globals['_ANTSTATE']._serialized_start=190
-  _globals['_ANTSTATE']._serialized_end=344
-  _globals['_CRUMBSTATE']._serialized_start=346
-  _globals['_CRUMBSTATE']._serialized_end=394
+  _globals['_SIMSNAPSHOT']._serialized_end=239
+  _globals['_ANTSTATE']._serialized_start=242
+  _globals['_ANTSTATE']._serialized_end=396
+  _globals['_PHEREMONESTATE']._serialized_start=398
+  _globals['_PHEREMONESTATE']._serialized_end=491
+  _globals['_CRUMBSTATE']._serialized_start=493
+  _globals['_CRUMBSTATE']._serialized_end=541
 # @@protoc_insertion_point(module_scope)

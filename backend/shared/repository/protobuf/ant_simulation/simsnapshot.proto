@@ -10,8 +10,11 @@ message SimSnapshot {
   repeated bytes ant_ids = 2;
   repeated AntState ants = 3;
 
+  // Pheremone data
+  repeated PheremoneState pheremones = 4;
+
   // Crumb data
-  repeated CrumbState crumbs = 4;
+  repeated CrumbState crumbs = 5;
 }
 
 message AntState {
@@ -27,6 +30,17 @@ message AntState {
   double pheremone_strength = 5;
   double speed = 6;
   double seconds_of_life_left = 7;
+}
+
+message PheremoneState {
+  // Position: (x, y)
+  double x = 1;
+  double y = 2;
+
+  // Leaving home (true) or Returning home (false)
+  bool is_leaving_home = 3;
+
+  double seconds_of_life_left = 4;
 }
 
 message CrumbState {

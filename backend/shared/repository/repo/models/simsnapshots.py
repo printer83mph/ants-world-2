@@ -17,6 +17,11 @@ class BaseSimSnapshot(BaseModel):
     ant_speeds: np.ndarray[tuple[int], np.dtype[np.float64]]
     ant_seconds_of_life_left: np.ndarray[tuple[int], np.dtype[np.float64]]
 
+    # pheremones share indexing
+    pheremone_positions: np.ndarray[tuple[int, int], np.dtype[np.float64]]
+    pheremone_is_leaving_home: np.ndarray[tuple[int], np.dtype[np.bool]]
+    pheremone_seconds_of_life_left: np.ndarray[tuple[int], np.dtype[np.float64]]
+
     # these crumb_ arrays also share indexing
     crumb_positions: np.ndarray[tuple[int, int], np.dtype[np.float64]]
     crumb_sizes: np.ndarray[tuple[int], np.dtype[np.float64]]

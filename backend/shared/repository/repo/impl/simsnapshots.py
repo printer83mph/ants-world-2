@@ -20,6 +20,7 @@ def _to_model(serialized_snapshot: bytes) -> SimSnapshot:
     _ = sim_snapshot.ParseFromString(serialized_snapshot)
 
     return SimSnapshot(
+        # ants
         ant_ids=np.array(sim_snapshot.ant_ids, "S16"),
         ant_positions=np.array(
             ([ant.x, ant.y] for ant in sim_snapshot.ants), np.float64
@@ -35,10 +36,25 @@ def _to_model(serialized_snapshot: bytes) -> SimSnapshot:
         ant_seconds_of_life_left=np.array(
             (ant.seconds_of_life_left for ant in sim_snapshot.ants), np.float64
         ),
+        #
+        # pheremones
+        pheremone_positions=np.array(
+            ([pher.x, pher.y] for pher in sim_snapshot.pheremones), np.float64
+        ),
+        pheremone_is_leaving_home=np.array(
+            (pher.is_leaving_home for pher in sim_snapshot.pheremones), np.bool
+        ),
+        pheremone_seconds_of_life_left=np.array(
+            (pher.seconds_of_life_left for pher in sim_snapshot.pheremones), np.float64
+        ),
+        #
+        # crumbs
         crumb_positions=np.array(
             ([crumb.x, crumb.y] for crumb in sim_snapshot.crumbs), np.float64
         ),
         crumb_sizes=np.array((crumb.size for crumb in sim_snapshot.crumbs), np.float64),
+        #
+        # metadata
         created_at=datetime.fromtimestamp(sim_snapshot.created_at),
     )
 
@@ -62,6 +78,17 @@ def _to_bytes(model: SimSnapshot) -> bytes:
         ant.pheremone_strength = float(model.ant_pheremone_strengths[i])  # pyright: ignore[reportAny]
         ant.speed = float(model.ant_speeds[i])  # pyright: ignore[reportAny]
         ant.seconds_of_life_left = float(model.ant_seconds_of_life_left[i])  # pyright: ignore[reportAny]
+
+    for pheremone_position, pheremone_is_leaving_home, pheremone_seconds_left in zip(
+        model.pheremone_positions,
+        model.pheremone_is_leaving_home,
+        model.pheremone_seconds_of_life_left,
+    ):
+        pheremone = sim_snapshot.pheremones.add()
+        pheremone.x = float(pheremone_position[0])  # pyright: ignore[reportAny]
+        pheremone.y = float(pheremone_position[1])  # pyright: ignore[reportAny]
+        pheremone.is_leaving_home = bool(pheremone_is_leaving_home)
+        pheremone.seconds_of_life_left = float(pheremone_seconds_left)
 
     for crumb_position, crumb_size in zip(model.crumb_positions, model.crumb_sizes):
         crumb = sim_snapshot.crumbs.add()
