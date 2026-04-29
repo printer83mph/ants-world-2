@@ -15,6 +15,26 @@ And the Redis will be viewable at `redis://localhost:6379`.
 
 Database migrations will be run automatically, and an instance of PGAdmin will be spun up at `localhost:5050` (with password "password").
 
+## Testing
+
+To test out the streaming websocket through nginx, run the folllowing in Node:
+
+```js
+const ws = new WebSocket("ws://localhost:8000/stream/ws");
+ws.onmessage = (e) => {
+  console.log(e.data);
+};
+
+// request (0, 0) to (40, 40) viewport
+ws.send(
+  JSON.stringify({
+    request: { type: "set-viewport", xmin: 0, xmax: 40, ymin: 0, ymax: 40 },
+  }),
+);
+```
+
+You should see buffered snapshots coming through!
+
 ## Devops-specific code
 
 - CI checks
